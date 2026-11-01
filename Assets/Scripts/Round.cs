@@ -9,13 +9,15 @@ public class Round : MonoBehaviour
     public GameObject timer;
     public TextMeshProUGUI[] pointTally;
     public int[] points = new int[4];
-    [HideInInspector] public int winnerSlot;
+    public int winnerSlot = -2;
 
     public static Round instance;
     private float startTimer = 3;
     public bool gamePlaying = false;
 
     public GameObject obj_countdown;
+    public GameObject obj_finish;
+    public GameObject fade;
 
     void Start()
     {
@@ -25,6 +27,13 @@ public class Round : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (fade != null)
+        {
+            var f = fade.GetComponent<Image>().color;
+            fade.GetComponent<Image>().color = new Vector4(f[0], f[1], f[2], f[3] - (2 * Time.deltaTime));
+            if (fade.GetComponent<Image>().color[3] <= 0) { Destroy(fade); } 
+        }
+     
         var prevStartTime = Mathf.Floor(startTimer);
         startTimer -= Time.deltaTime; 
         if (startTimer > 0 || myTime <= 0) 
@@ -33,6 +42,7 @@ public class Round : MonoBehaviour
             {
                 var countdown = Instantiate(obj_countdown, new Vector3(0, 0, 0), Quaternion.identity, timer.transform.parent);
                 countdown.GetComponent<Countdown>().value = Mathf.FloorToInt(startTimer);
+                //countdown.transform.localPosition = new Vector3(0, 0, 0);
             }
             gamePlaying = false; return; 
         }
@@ -45,9 +55,18 @@ public class Round : MonoBehaviour
             countdownB.GetComponent<Countdown>().value = 4;
         }
 
+        
+
         gamePlaying = true;
+        var prevTime = myTime;
         myTime -= Time.deltaTime;
         timer.transform.GetChild(3).gameObject.GetComponent<TextMeshProUGUI>().text = LeadingZero(Mathf.CeilToInt(myTime), 3);
+
+        if (Mathf.Ceil(prevTime) > 0 && Mathf.Ceil(myTime) == 0)
+        {
+            var fin = Instantiate(obj_finish, new Vector3(0, 0, 0), Quaternion.identity, timer.transform.parent);
+            fin.transform.localPosition = new Vector3(0, 0, 0);
+        }
     }
 
     public static void UpdatePoints(int slot, int points)
@@ -60,7 +79,7 @@ public class Round : MonoBehaviour
 
         r.pointTally[slot].text = ""+r.points[slot];
 
-        if (prevWinner != r.winnerSlot) { Round.UpdateColor(r.winnerSlot+1); }
+        if (prevWinner != r.winnerSlot) { Round.UpdateColor(r.winnerSlot != -1 ? GameHandler.instance.gamepadSetup[r.winnerSlot]+1 : -1); }
     }
 
     public static int UpdateWinner()
@@ -90,6 +109,8 @@ public class Round : MonoBehaviour
         {
             default:
                 myCol = new Color32(255, 255, 255, 255); break;
+            case (0):
+                myCol = new Color32(150, 150, 150, 255); break;
             case (1):
                 myCol = new Color32(255, 0, 0, 255); break;
             case (2):

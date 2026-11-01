@@ -33,8 +33,8 @@ public class PlayerCursor : MonoBehaviour
         if (input != null)
         {
             Vector2 turnValue = move.ReadValue<Vector2>();
-            float xoutput = (turnValue.x) * 150 * Time.deltaTime;
-            float youtput = (turnValue.y) * 150 * Time.deltaTime;
+            float xoutput = (turnValue.x) * 200 * Time.deltaTime;
+            float youtput = (turnValue.y) * 200 * Time.deltaTime;
 
             transform.position += new Vector3(xoutput, youtput, 0);
 
@@ -59,6 +59,8 @@ public class PlayerCursor : MonoBehaviour
             transform.GetChild(1).gameObject.SetActive(false);
             GetComponent<Image>().enabled = false;
         }
+
+        transform.localPosition = new Vector3(Mathf.Clamp(transform.localPosition.x, -395, 395), Mathf.Clamp(transform.localPosition.y, -225, 225), 0);
     }
 
     void OnTriggerStay2D(Collider2D other)
@@ -69,11 +71,10 @@ public class PlayerCursor : MonoBehaviour
         {
             print("pressed");
 
-            var id = other.GetComponent<SelectButtons>();
+            var id = other.GetComponent<SelectButtons>(); if (id == null) { return; }
             var button = other.GetComponent<SelectButtons>().myId;
-            if (id = null) { return; }
 
-            if (other.GetComponent<SelectSlot>() != null)
+            if (other.GetComponentInParent<SelectSlot>() != null)
             {
                 if (!other.GetComponentInParent<SelectSlot>().canSelect) { return; }
             }

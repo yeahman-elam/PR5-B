@@ -29,6 +29,8 @@ public class SelectSlot : MonoBehaviour
     void Start()
     {
         startPos = transform.localPosition;
+        slotUse = GameHandler.instance.gamepadSetup[mySlot];
+        reset = true;
     }
 
     // Update is called once per frame
@@ -41,6 +43,7 @@ public class SelectSlot : MonoBehaviour
             {
                 text[0].SetActive(false); cpu[0].SetActive(false); cpu[1].transform.GetChild(0).gameObject.SetActive(false); SetupText("PRESS A BUTTON TO JOIN", "READY");
                 cpu[1].transform.GetChild(1).gameObject.SetActive(ready);
+                text[1].SetActive(true);
             }
             else
             {
@@ -48,6 +51,8 @@ public class SelectSlot : MonoBehaviour
                 cpu[1].transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = "" + cpuLevel;
                 cpu[1].transform.GetChild(1).gameObject.SetActive(false);
                 cpu[0].gameObject.SetActive(true);
+                text[0].SetActive(true);
+                text[1].SetActive(true);
             }
             reset = true;
         }

@@ -14,8 +14,7 @@ public class GameHandler : MonoBehaviour
         AddPlayer,
         AddCPU,
         StartGame,
-        Ready,
-        Start
+        Ready
     }
 
     void Start()
@@ -25,6 +24,6 @@ public class GameHandler : MonoBehaviour
             
         if (SceneManager.GetActiveScene().name == "Init") { SceneManager.LoadScene("Title"); }
 
-        gamepadSetup[0] = -1; gamepadSetup[1] = -1; gamepadSetup[2] = -1; gamepadSetup[3] = -1;
+        gamepadSetup[0] = -2; gamepadSetup[1] = -2; gamepadSetup[2] = -2; gamepadSetup[3] = -2;
     }
 }

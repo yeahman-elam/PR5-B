@@ -19,6 +19,7 @@ public class HandlePlanet : MonoBehaviour
     private bool inputSetup = false;
 
     private PlayerInput input;
+    private int inputSlot;
     private Vector3 spd;
 
     private bool isCpu = false;
@@ -26,15 +27,18 @@ public class HandlePlanet : MonoBehaviour
     InputAction move;
 
     private bool setup;
+    private bool finish;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        PullGamepadPlanet();
+
         StartupPlanet();
-        SetColors(slot);
+        SetColors(inputSlot + 1);
         exploder.GetComponent<Renderer>().material.SetColor("_FireCol", myCol);
 
-        PullGamepadPlanet();
+        
         if (!isCpu) { move = input.actions.FindAction("Move"); }
 
         myMatRef = cursor.transform.GetChild(0).gameObject.GetComponent<Renderer>().material;
@@ -58,7 +62,7 @@ public class HandlePlanet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!Round.instance.gamePlaying && !inputSetup){ PullGamepadPlanet(); }
+        //if (!Round.instance.gamePlaying && !inputSetup){ PullGamepadPlanet(); SetColors(GameHandler.instance.gamepadSetup[inputSlot] + 1); }
         var kb = Keyboard.current;
         if (kb.rKey.wasPressedThisFrame) { StartupPlanet(); }
 
@@ -78,6 +82,7 @@ public class HandlePlanet : MonoBehaviour
         charge -= 0.5f * Time.deltaTime;
         charge = Mathf.Clamp(charge, 0, 1);
 
+        if (!finish && Round.instance.myTime <= 0) { finish = true; shake = 0.65f; Invoke("EndRound", 0.5f); }
         if (!Round.instance.gamePlaying) { spd = new Vector3(Function.Approach(spd[0], 0, 0.5f), 0, Function.Approach(spd[2], 0, .5f)); }
         transform.GetChild(0).Rotate(spd[0], 0, spd[2]);
         Heuristic();
@@ -99,8 +104,8 @@ public class HandlePlanet : MonoBehaviour
 
 
         Vector2 turnValue = move.ReadValue<Vector2>();
-        float zoutput = (turnValue.x) * 30 * Time.deltaTime;
-        float xoutput = (-turnValue.y) * 30 * Time.deltaTime;
+        float zoutput = (turnValue.x) * 40 * Time.deltaTime;
+        float xoutput = (-turnValue.y) * 40 * Time.deltaTime;
 
         spd = new Vector3(Function.Approach(spd[0], -xoutput, 1f), 0, Function.Approach(spd[2], -zoutput, 1f));
         //transform.localRotation = Quaternion.Euler(rot.x + (xoutput * 50), rot.y, rot.z + (zoutput*50));
@@ -142,29 +147,17 @@ public class HandlePlanet : MonoBehaviour
         var g = GameHandler.instance;
         if (g == null) { inputSetup = false; return; }
         var slotUse = -1;
-        for (int j = 0; j < 4; j ++)
-        {
-            if (g.gamepadSetup[j] == slot - 1) { slotUse = j; break; }
-        }
-        if (slotUse == -1) { isCpu = true; return; }
+        slotUse = g.gamepadSetup[slot - 1];
+        if (slotUse == -1) { isCpu = true; inputSlot = -1; inputSetup = true; return; }
 
         for (int i = 0; i < 4; i++)
         {
-            var output = g.gamepad[slotUse];
+            var output = g.gamepad[Mathf.Clamp(slotUse, 0, 3)];
             if (output == null) { isCpu = true; print($"PLAYER SLOT {slot} | NO CONNECTION | CPU SLOT"); break; }
-            input = output; isCpu = false; inputSetup = true; move = input.actions.FindAction("Move");
+            input = output; isCpu = false; inputSetup = true; move = input.actions.FindAction("Move"); inputSlot = slotUse;
             print($"PLAYER SLOT {slot} | GOT CONNECTION | SLOT {slotUse}");
         }
         inputSetup = true;
-    }
-
-    void EndRound()
-    {
-        transform.GetChild(0).gameObject.SetActive(false);
-        transform.GetChild(1).gameObject.SetActive(false);
-        shake = 0.5f;
-
-        exploder.Play();
     }
 
     void DoSetup()
@@ -174,5 +167,15 @@ public class HandlePlanet : MonoBehaviour
 
         SetColors(g.gamepadSetup[slot] + 1);
         setup = true;
+    }
+
+    void EndRound()
+    {
+        GetComponent<MeshRenderer>().enabled = false;
+        transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
+        transform.GetChild(1).gameObject.SetActive(false);
+        shake = 0.5f;
+
+        exploder.Play();
     }
 }
