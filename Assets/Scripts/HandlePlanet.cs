@@ -28,6 +28,7 @@ public class HandlePlanet : MonoBehaviour
 
     private bool setup;
     private bool finish;
+    public bool DoAgent = false;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -63,9 +64,6 @@ public class HandlePlanet : MonoBehaviour
     void Update()
     {
         //if (!Round.instance.gamePlaying && !inputSetup){ PullGamepadPlanet(); SetColors(GameHandler.instance.gamepadSetup[inputSlot] + 1); }
-        var kb = Keyboard.current;
-        if (kb.rKey.wasPressedThisFrame) { StartupPlanet(); }
-
         if (charge != 0) { myMatRef.color = new Vector4(Mathf.Clamp(myCol[0] + charge, 0, 1), Mathf.Clamp(myCol[1] + charge, 0, 1), Mathf.Clamp(myCol[2] + charge, 0, 1), 1); } else { shiner.Stop(); }
         if (charge >= 1)
         {
@@ -82,10 +80,13 @@ public class HandlePlanet : MonoBehaviour
         charge -= 0.5f * Time.deltaTime;
         charge = Mathf.Clamp(charge, 0, 1);
 
-        if (!finish && Round.instance.myTime <= 0) { finish = true; shake = 0.65f; Invoke("EndRound", 0.5f); }
-        if (!Round.instance.gamePlaying) { spd = new Vector3(Function.Approach(spd[0], 0, 0.5f), 0, Function.Approach(spd[2], 0, .5f)); }
+        if (!DoAgent)
+        {
+            if (!finish && Round.instance.myTime <= 0) { finish = true; shake = 0.65f; Invoke("EndRound", 0.5f); }
+            if (!Round.instance.gamePlaying) { spd = new Vector3(Function.Approach(spd[0], 0, 0.5f), 0, Function.Approach(spd[2], 0, .5f)); }
+            Heuristic();
+        }
         transform.GetChild(0).Rotate(spd[0], 0, spd[2]);
-        Heuristic();
     }
 
     void FixedUpdate()
@@ -99,9 +100,6 @@ public class HandlePlanet : MonoBehaviour
         if (!Round.instance.gamePlaying || isCpu || !inputSetup) { return; }
 
         //var continuous = actionsOut.ContinuousActions;
-        var myKb = Keyboard.current;
-        if (myKb == null) { return; }
-
 
         Vector2 turnValue = move.ReadValue<Vector2>();
         float zoutput = (turnValue.x) * 40 * Time.deltaTime;
