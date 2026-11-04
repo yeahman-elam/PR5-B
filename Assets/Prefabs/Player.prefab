@@ -313,7 +313,6 @@ GameObject:
   - component: {fileID: 719043922600059768}
   - component: {fileID: 6279098873982748104}
   - component: {fileID: 4079716268619879708}
-  - component: {fileID: 8551015509419390484}
   - component: {fileID: 4258369541554677315}
   m_Layer: 0
   m_Name: Player
@@ -397,27 +396,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &8551015509419390484
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8908005987503410561}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.1
-  m_Center: {x: 0, y: 0.52, z: 0}
 --- !u!114 &4258369541554677315
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -435,7 +413,7 @@ MonoBehaviour:
   exploder: {fileID: 6519847941947578181}
   shiner: {fileID: 2614464483799567333}
   cam: {fileID: 2056845745204291015}
-  myIndex: 0
+  DoAgent: 0
 --- !u!1 &9073712573750579942
 GameObject:
   m_ObjectHideFlags: 0

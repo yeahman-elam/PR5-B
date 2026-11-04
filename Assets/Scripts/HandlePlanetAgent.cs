@@ -18,14 +18,12 @@ public class HandlePlanetAgent : Agent
 
     public override void OnEpisodeBegin()
     {
-        transform.localPosition = new Vector3(
-        Random.Range(-4f, 4f), 0.5f, Random.Range(-4f, 0f));
-        target.localPosition = new Vector3(Random.Range(-4f, 4f), 0.5f, Random.Range(1f, 4f));
+        target.localRotation = Quaternion.Euler(Random.Range(0, 360), 0, Random.Range(0, 360));
     }
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        sensor.AddObservation(transform.localRotation); // 3
+        sensor.AddObservation(transform.GetChild(0).localRotation); // 3
         sensor.AddObservation(target.localRotation); // 3
     }
 
@@ -47,7 +45,6 @@ public class HandlePlanetAgent : Agent
 
     void Update()
     {
-        SetReward(Mathf.Clamp(gameplay.charge, 0, 1));
-        if (gameplay.charge == 1) { floor.material.color = winColour; EndEpisode(); }
+        if (gameplay.charge >= 0) { floor.material.color = winColour; EndEpisode(); floor.material.color = winColour; }
     }
 }
