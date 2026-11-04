@@ -17,6 +17,7 @@ public class Cursor : MonoBehaviour
             if (other.CompareTag("Target"))
             {
                 GetComponentInParent<HandlePlanet>().charge += 1 * Time.deltaTime;
+                print("cpu hit light!! | " + GetComponentInParent<HandlePlanet>().charge);
             }
         }
     }

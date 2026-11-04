@@ -40,7 +40,7 @@ public class HandlePlanet : MonoBehaviour
         exploder.GetComponent<Renderer>().material.SetColor("_FireCol", myCol);
 
         
-        if (!isCpu) { move = input.actions.FindAction("Move"); }
+        if (!isCpu && !DoAgent) { move = input.actions.FindAction("Move"); }
 
         myMatRef = cursor.transform.GetChild(0).gameObject.GetComponent<Renderer>().material;
 

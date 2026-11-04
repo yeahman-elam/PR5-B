@@ -15,11 +15,13 @@ public class HandlePlanetAgent : Agent
     [SerializeField] private Color loseColour = Color.red;
     [SerializeField] private Color idleColour = Color.grey;
     private HandlePlanet gameplay;
+    public float agentAddBonus = 0;
 
     public override void OnEpisodeBegin()
     {
         target.localRotation = Quaternion.Euler(Random.Range(0, 360), 0, Random.Range(0, 360));
         transform.GetChild(0).localRotation = Quaternion.Euler(0, 0, 0);
+        gameplay.charge = 0;
     }
 
     public override void CollectObservations(VectorSensor sensor)
@@ -46,6 +48,11 @@ public class HandlePlanetAgent : Agent
 
     void Update()
     {
-        if (gameplay.charge >= 0) { floor.material.color = winColour; EndEpisode(); floor.material.color = winColour; }
+        if (gameplay.charge > 0) { floor.material.color = winColour; EndEpisode(); floor.material.color = winColour; gameplay.charge = 0; }
+        if (agentAddBonus != 0)
+        {
+            AddReward(agentAddBonus);
+            agentAddBonus = 0;
+        }
     }
 }
