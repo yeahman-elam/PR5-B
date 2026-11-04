@@ -19,6 +19,7 @@ public class HandlePlanetAgent : Agent
     public override void OnEpisodeBegin()
     {
         target.localRotation = Quaternion.Euler(Random.Range(0, 360), 0, Random.Range(0, 360));
+        transform.GetChild(0).localRotation = Quaternion.Euler(0, 0, 0);
     }
 
     public override void CollectObservations(VectorSensor sensor)
