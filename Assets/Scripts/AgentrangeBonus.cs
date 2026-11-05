@@ -6,7 +6,14 @@ public class AgentrangeBonus : MonoBehaviour
     {
         if (other.CompareTag("Target"))
         {
-            GetComponentInParent<HandlePlanetAgent>().agentAddBonus = 0.5f;
+            GetComponentInParent<HandlePlanetAgent>().agentAddBonus = 0.25f;
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Target"))
+        {
+            GetComponentInParent<HandlePlanetAgent>().agentAddBonus = -0.3f;
         }
     }
 }

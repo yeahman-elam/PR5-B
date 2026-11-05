@@ -7,24 +7,24 @@ public class HandlePlanet : MonoBehaviour
     GameObject cursor;
     GameObject light;
 
-    private Color32 myCol;
-    private Material myMatRef;
+    public Color32 myCol;
+    public Material myMatRef;
     public float charge = 0;
 
     public ParticleSystem exploder;
     public ParticleSystem shiner;
     public GameObject cam;
-    private float shake;
+    public float shake;
 
-    private bool inputSetup = false;
+    public bool inputSetup = false;
 
     private PlayerInput input;
     private int inputSlot;
-    private Vector3 spd;
+    public Vector3 spd;
 
-    private bool isCpu = false;
+    public bool isCpu = false;
 
-    InputAction move;
+    public InputAction move;
 
     private bool setup;
     private bool finish;
@@ -108,7 +108,6 @@ public class HandlePlanet : MonoBehaviour
         spd = new Vector3(Function.Approach(spd[0], -xoutput, 1f), 0, Function.Approach(spd[2], -zoutput, 1f));
         //transform.localRotation = Quaternion.Euler(rot.x + (xoutput * 50), rot.y, rot.z + (zoutput*50));
     }
-
     
     void StartupPlanet()
     {
