@@ -45,7 +45,8 @@ public class HandlePlanetAgent : Agent
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        if (!gameplay.isCpu && !gameplay.DoAgent) { print($"isNotCpu {gameplay.slot}"); return; }
+        if (!gameplay.isCpu && !gameplay.DoAgent && Round.instance != null) { print($"isNotCpu {gameplay.slot}"); return; }
+        if (!Round.instance.gamePlaying) { return; }
 
         float moveX = actions.ContinuousActions[0];
         float moveZ = actions.ContinuousActions[1];
