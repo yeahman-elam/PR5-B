@@ -53,13 +53,9 @@ public class HandlePlanetAgent : Agent
 
         // Small penalty every step so it learns to hurry
         if (MaxStep > 0) AddReward(-1f / MaxStep);
-    }
 
-    void Update()
-    {
         if (gameplay.charge >= 1) { floor.material.color = winColour; AddReward(.75f); End(); EndEpisode(); floor.material.color = winColour; gameplay.charge = 0; }
-        if (gameplay.charge > 0 && !hasCharged) { AddReward(0.5f/(hits+1)); hasCharged = true; hits += 1; }
-        if (gameplay.charge <= 0 && hasCharged) { AddReward(-0.15f*(hits+1));  hasCharged = false; }
+        if (gameplay.charge > 0) { AddReward(Time.deltaTime); hasCharged = true; hits += 1; }
         if (agentAddBonus != 0)
         {
             AddReward(agentAddBonus);
